@@ -31,7 +31,7 @@ def load_audio(file_path, sample_rate=32000):
     return waveform
 
 # ====== Run SED for One File ======
-def detect_events(file_path, confidence_threshold=0.5):
+def detect_events(file_path, confidence_threshold=0.1):
     audio = load_audio(file_path)
     audio = torch.tensor(audio).float().unsqueeze(0)
 
