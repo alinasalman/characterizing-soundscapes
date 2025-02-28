@@ -1,0 +1,12 @@
+*
+!*/
+!*.*
+*.hdf5
+*.pyc
+*.wav
+__pycache__
+_logs
+*.pth
+Cnn14_DecisionLevelMax_mAP=0.385.pth
+Cnn14_mAP=0.431.pth
+pann-env/
