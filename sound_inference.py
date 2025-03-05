@@ -36,20 +36,22 @@ def classify_audio(file_path):
 
     print(f"Prediction type: {type(prediction)}")
 
-    top_indices = prediction.squeeze().argsort(descending=True)[:10]
+    top_indices = prediction.squeeze().argsort(descending=True)[:5]
     return [(LABELS[idx], prediction[0, idx].item()) for idx in top_indices]
 
 # ===== Process Folder =====
-def process_folder(folder_path, max_files=10):
-    files = [f for f in os.listdir(folder_path) if f.endswith('.wav')][:max_files]
+def process_folder(folder_path, max_files=None):
+    files = [f for f in os.listdir(folder_path) if f.endswith('.wav')] #[:max_files]
 
     results = []
-    for file in files:
+    for idx, file in enumerate(files):
         file_path = os.path.join(folder_path, file)
         print(f'Processing {file}...')
 
         top_labels = classify_audio(file_path)
         results.append({'filename': file, 'top_labels': top_labels})
+        if idx % 10 == 0:
+            pd.DataFrame(results).to_csv("checkpoint.csv", index=False)
 
     return results
 
@@ -62,6 +64,7 @@ def save_results(results, output_file='classification_results.csv'):
             row[f'label_{i+1}'] = label
             row[f'score_{i+1}'] = score
         rows.append(row)
+        
 
     pd.DataFrame(rows).to_csv(output_file, index=False)
     print(f'Saved to {output_file}')
@@ -69,5 +72,5 @@ def save_results(results, output_file='classification_results.csv'):
 # ===== Main Run =====
 if __name__ == '__main__':
     folder = r'C:\Users\alina\Desktop\Capstone Project\segmented_audio'
-    results = process_folder(folder, max_files=10)  # First 10 for test
+    results = process_folder(folder)  # First 10 for test
     save_results(results)
